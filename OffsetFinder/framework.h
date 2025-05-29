@@ -219,6 +219,12 @@ static void FindNetDriverTickFlush()
 static void FindRepDriverServerReplicateActors()
 {
 	std::vector<uint8_t> Bytes = (SDK::UE::GetFortniteVersion() >= 19.00) ? std::vector<uint8_t>({ 0x48,0x8B,0xC4 }) : std::vector<uint8_t>({ 0x4C, 0x8B, 0xDC });
+	if (SDK::UE::GetFortniteVersion() <= 4.50) {
+		Offsets::RepDriverServerReplicateActors = Memcury::Scanner::FindPattern(
+			"4C 8B DC 55 49 8D AB ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 48 8B 41 ? 49 89 5B ? 49 89 73 ? 49 89 7B").Get();
+		return;
+	}
+		
 	Offsets::RepDriverServerReplicateActors = Memcury::Scanner::FindStringRef(L"NET_PrepareReplication", true).ScanFor(Bytes, false).Get();
 }
 
